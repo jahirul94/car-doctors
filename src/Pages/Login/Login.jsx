@@ -1,9 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import img from '../../assets/images/login/login.svg'
 import { useContext } from 'react';
 import { AuthContext } from '../../Provider/AuthProvider';
 
 const Login = () => {
+    const navigate = useNavigate() ;
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
     const { logInUser } = useContext(AuthContext);
     const handleLogin = event =>{
        event.preventDefault()   ;
@@ -12,8 +15,25 @@ const Login = () => {
        const password = form.password.value;
        logInUser( email , password )
        .then(result =>{
-        //  console.log(result.user);
-         form.reset();
+         const user = result.user ;
+        //  form.reset();
+        const loggedUser = {
+            email : user.email 
+        }
+         fetch('http://localhost:5000/jwt' , {
+             method:"POST",
+             headers : {
+                'content-type':'application/json'
+             },
+             body : JSON.stringify(loggedUser)
+         })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data);
+            localStorage.setItem('car-doctor-token' , data.token )
+             navigate(from , { replace : true })
+          })
+
        })
        .catch(err =>{
          console.log(err.message);
@@ -39,7 +59,7 @@ const Login = () => {
                             <label className="label">
                             <span className="label-text">Password</span>
                             </label>
-                            <input type="text" name='password' placeholder="password" className="input input-bordered" />
+                            <input type="password" name='password' placeholder="password" className="input input-bordered" />
                             <label className="label">
                             <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                             </label>

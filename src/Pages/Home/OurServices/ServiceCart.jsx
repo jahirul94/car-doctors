@@ -12,7 +12,7 @@ const ServiceCart = ({service}) => {
                 <h2 className="card-title text-3xl font-bold">{title}</h2>
                 <div className="flex justify-between items-center">
                     <p className="text-xl text-orange-500 font-bold">Price : $ {price}</p>
-                   <Link to={`services/${_id}`}><FaArrowRight className='text-orange-500 text-2xl'></FaArrowRight></Link>
+                   <Link to={`/checkOut/${_id}`}><FaArrowRight className='text-orange-500 text-2xl'></FaArrowRight></Link>
                 </div>
             </div>
         </div>

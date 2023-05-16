@@ -1,14 +1,31 @@
 import { Link } from 'react-router-dom';
 import logo from '../../../assets/logo.svg'
+import { useContext } from 'react';
+import { AuthContext } from '../../../Provider/AuthProvider';
 
 const NavBAr = () => {
-
+     const { user , logOut } = useContext(AuthContext);
+    const handleLogOut = () =>{
+        logOut()
+        .then(()=>{
+             localStorage.removeItem('car-doctor-token')
+        })
+        .catch(err =>{
+            const error = err.massage;
+            console.log(error);
+        })
+    }
     const navItems = <>
         <li><Link to='/'>Home</Link></li>
         <li><Link to='/about'>About</Link></li>
-        <li><Link to='/services'>Services</Link></li>
-        <li><Link to='/blog'>Blog</Link></li>
-        <li><Link  to='contact'>Contact</Link></li>
+        {
+          user?.email ? <>
+            <li><Link to='/booking'>Bookings</Link></li>
+            <li><Link><button onClick={ handleLogOut }>Log Out</button></Link></li>
+          
+          </> :
+            <li><Link to='/Login'>Login</Link></li>
+        }
     
     </>
 
